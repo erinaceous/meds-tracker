@@ -12,6 +12,11 @@ CACHE_DIR=os.path.join(
     "download",
     "pharmacies"
 )
+POSTCODES_FILE=os.path.join(
+    os.getcwd(),
+    "download",
+    "postcodes.json"
+)
 
 
 def parse_args():
@@ -53,18 +58,35 @@ def get_pharmacies(page=None, offset=None, cache_dir=CACHE_DIR, root=ROOT):
             )
 
 
+def get_postcodes():
+    postcode_list = json.load(open(POSTCODES_FILE))
+    return {
+        postcode[0].replace(" ", "").strip().upper(): {
+            "latitude": postcode[1],
+            "longitude": postcode[2]
+        }
+        for postcode in postcode_list
+    }
+
+
 def main():
     args = parse_args()
+    pharmacies = []
+    postcodes = get_postcodes()
     for pharmacy in get_pharmacies(cache_dir=args.cache_dir):
-        print(
-            pharmacy.get("POST_CODE"),
-            " ".join([
+        postcode = pharmacy.get("POST_CODE").replace(" ", "").strip().upper()
+        location = postcodes.get(postcode, {})
+        pharmacies.append({
+            "name": pharmacy.get("PHARMACY_TRADING_NAME"),
+            "address": "\n".join([
                 pharmacy.get(f"ADDRESS_FIELD{x}", "") or ""
                 for x in range(1, 5)
             ]).strip(),
-            pharmacy.get("PHARMACY_TRADING_NAME"),
-            sep=", "
-        )
+            "postcode": pharmacy.get("POST_CODE").strip().upper(),
+            "latitude": location.get("latitude"),
+            "longitude": location.get("longitude"),
+        })
+    print(json.dumps(pharmacies, indent=1))
 
 
 if __name__ == "__main__":

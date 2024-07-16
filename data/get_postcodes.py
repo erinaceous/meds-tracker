@@ -1,7 +1,14 @@
 #!/usr/bin/env python3
-from get_pharmacies import get_pharmacies
+import argparse
+import requests
+import tempfile
+import tarfile
 import json
+import io
 import os
+
+
+URL = "https://www.getthedata.com/downloads/open_postcode_geo.csv.tar.gz"
 
 
 def parse_postcode_csv():
@@ -32,24 +39,34 @@ def parse_postcode_csv():
     return postcodes
 
 
+def fetch_archive():
+    response = requests.get(URL, stream=True)
+    response.raise_for_status()
+    return response
+
+
+def streamed_read_csv():
+    with tempfile.TemporaryFile("w+b") as tmp_fd:
+        with fetch_archive() as download:
+            tmp_fd.write(download.content)
+        tmp_fd.seek(0)
+        with tarfile.open(fileobj=tmp_fd, mode="r:gz") as tar:
+            file = tar.extractfile("open_postcode_geo.csv")
+            lines = io.TextIOWrapper(file, encoding="utf-8")
+            for line in lines:
+                if "terminated" in line or "\\N" in line:
+                    continue
+                row = line.strip().split(",")
+                yield [row[0], float(row[7]), float(row[8])]
+
+
 def main():
-    postcodes = parse_postcode_csv()
-    for pharmacy in get_pharmacies():
-        postcode = pharmacy.get("POST_CODE").strip()
-        postcode_normalised = postcode.replace(" ", "").strip().lower()
-        pharmacy.update(**postcodes.get(postcode_normalised, {
-            "LATITUDE": None, "LONGITUDE": None
-        }))
-        print(json.dumps({
-            "name": pharmacy.get("PHARMACY_TRADING_NAME"),
-            "address": "\n".join([
-                pharmacy.get(f"ADDRESS_FIELD{x}", "") or ""
-                for x in range(1, 5)
-            ]).strip(),
-            "postcode": postcode,
-            "latitude": pharmacy.get("LATITUDE"),
-            "longitude": pharmacy.get("LONGITUDE"),
-        }))
+    print(
+        json.dumps(
+            list(streamed_read_csv()),
+            indent=1
+        )
+    )
 
 
 if __name__ == "__main__":

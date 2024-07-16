@@ -95,33 +95,21 @@ def extract_dosages(product):
     return equivalences
 
 
-def stream_csv(header=True):
+def get_medication_names():
     index = get_index()
-    if header is True:
-        yield ["category", "product", "dosage"]
+    medications = {}
     for slug in index:
         meds_group = get_meds_group(slug)
         title = meds_group.get("title").strip()
-        for product in get_products(meds_group):
-            dosages = extract_dosages(product)
-            prefix = [
-                title,
-                product.get("contentFor").strip()
-            ]
-            if dosages is None or len(dosages) == 0:
-                yield prefix
-                continue
-            for dosage in dosages:
-                yield prefix + [dosage]
+        medications[title] = [
+            product.get("contentFor").strip()
+            for product in get_products(meds_group)
+        ]
+    return medications
 
 
 def main():
-    for row in stream_csv(header=False):
-        print(json.dumps({
-            "category": row[0],
-            "product": row[1],
-            "dosage": row[2] if len(row) > 2 else None
-        }))
+    print(json.dumps(get_medication_names(), indent=1))
 
 
 if __name__ == "__main__":

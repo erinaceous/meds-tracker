@@ -1,0 +1,15 @@
+create table postcodes
+(
+    postcode  TEXT(8) collate NOCASE not null,
+    latitude  REAL not null,
+    longitude REAL not null
+);
+
+create index postcodes_latitude_index
+    on postcodes (latitude);
+
+create index postcodes_longitude_index
+    on postcodes (longitude);
+
+create index postcodes_postcode_index
+    on postcodes (postcode);
