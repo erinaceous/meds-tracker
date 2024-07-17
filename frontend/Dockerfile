@@ -3,6 +3,7 @@ COPY . /app/
 WORKDIR /app
 RUN yarn install
 RUN yarn build
+RUN yarn generate
 
 FROM node:20
 LABEL author="Owain Jones <github.com/erinaceous>"
