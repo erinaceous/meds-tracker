@@ -6,7 +6,7 @@ export default defineComponent({
   data() {
     return {
       //apiRoot: 'http://localhost:8000',
-      apiRoot: 'https://shark-app-92lpb.ondigitalocean.app/api',
+      apiRoot: '/api',
       searchType: 0,
       medicationGroups: {},
       pharmacies: [],
