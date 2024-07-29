@@ -49,7 +49,18 @@ export default defineComponent({
               url: this.url
             }
           }
-      )
+      ).then((medication) => {
+        let name = medication.category;
+        if (medication.product) {
+          name += `: ${medication.product}`;
+        }
+        return {
+          ...medication,
+          title: medication.product || medication.category,
+          subtitle: medication.product ? medication.category : undefined,
+          value: name,
+        }
+      })
       this.loading = false;
       this.$emit('submitted', result);
       this.clear();

@@ -29,6 +29,7 @@ export default defineNuxtConfig({
     },
     'nuxt-lodash',
     '@vite-pwa/nuxt',
+    '@nuxt/eslint',
     //'@nuxtjs/sentry'
   ],
   vite: {

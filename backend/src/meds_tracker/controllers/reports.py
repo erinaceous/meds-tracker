@@ -109,10 +109,10 @@ async def create_or_update_report(
     signature: str,
 ) -> typing.Tuple[Report, bool]:
     report = Report(**input_report.dict(), signature=signature)
-    await get_medication_by_uid_static_or_persistent(
+    medication = await get_medication_by_uid_static_or_persistent(
         static_session, persistent_session, report.medication_uid, raise_exception=True
     )
-    await get_pharmacy_by_uid_static_or_persistent(
+    pharmacy = await get_pharmacy_by_uid_static_or_persistent(
         static_session, persistent_session, report.pharmacy_uid, raise_exception=True
     )
     today = datetime.date.today()
@@ -120,13 +120,13 @@ async def create_or_update_report(
         raise HTTPException(
             status_code=403, detail="Sorry! You can't make reports in the future."
         )
-    pending_review = False
+    pending_review = medication.pending_review or pharmacy.pending_review
     if report.type is not None:
-        pending_review = report.type not in await get_known_types(
+        pending_review = pending_review or report.type not in await get_known_types(
             persistent_session, [report.medication_uid]
         )
-    elif report.dosage is not None:
-        pending_review = report.dosage not in await get_known_dosages(
+    if report.dosage is not None:
+        pending_review = pending_review or report.dosage not in await get_known_dosages(
             persistent_session, [report.medication_uid]
         )
     existing_report = await find_existing_report(persistent_session, report)

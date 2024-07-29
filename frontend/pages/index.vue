@@ -38,9 +38,9 @@ export default defineComponent({
 </script>
 
 <template>
-  <v-row class="mb-2 d-flex justify-center w-100">
+  <v-row class="mb-2 d-flex align-center justify-center w-100">
     <v-slide-y-transition leave-absolute>
-      <v-col cols="auto" sm="12" md="6" lg="4" xl="3">
+      <v-col cols="auto" sm="12" md="8" lg="6" xl="4" class="flex-grow-1">
         <search-reports
             @loading="(val) => { loading = val }"
             @searchReports="onSearchReports"
@@ -49,7 +49,7 @@ export default defineComponent({
       </v-col>
     </v-slide-y-transition>
   </v-row>
-  <v-row class="d-flex">
+  <v-row class="d-flex align-center justify-center w-100">
     <v-fade-transition leave-absolute group>
       <v-col v-for="report in reports" :key="report._id" cols="auto" sm="12" md="6" lg="4" xl="3" class="flex-grow-1">
         <div>

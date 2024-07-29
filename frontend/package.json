@@ -12,7 +12,11 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "test:ts": "tsc --noEmit"
+    "test:ts": "tsc --noEmit",
+    "lint": "yarn lint:eslint && yarn lint:prettier",
+    "lint:eslint": "eslint .",
+    "lint:prettier": "prettier . --check",
+    "lintfix": "eslint . --fix && prettier --write --list-different ."
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",
@@ -23,9 +27,14 @@
     "vue": "^3.4.33"
   },
   "devDependencies": {
+    "@nuxt/eslint": "^0.4.0",
+    "eslint": "^9.8.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
     "nuxt-lodash": "^2.5.3",
     "openapi-fetch": "^0.10.2",
     "openapi-typescript": "^7.1.0",
+    "prettier": "^3.3.3",
     "typescript": "^5.5.4",
     "vite-plugin-vuetify": "^2.0.3",
     "vuetify": "^3.6.12"

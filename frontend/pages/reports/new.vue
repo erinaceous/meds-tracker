@@ -148,7 +148,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <v-row class="w-100 justify-center">
+  <v-row class="w-100 justify-center align-center flex-grow-0">
     <v-fade-transition leave-absolute group>
       <v-col
           v-for="(item, i) of pendingReports"
@@ -158,6 +158,7 @@ export default defineComponent({
           md="6"
           lg="4"
           xl="3"
+          class="flex-grow-1"
       >
         <v-card
             rounded="lg"
@@ -204,36 +205,40 @@ export default defineComponent({
           ></edit-report-item>
         </v-card>
       </v-col>
-      <v-col cols="auto" sm="12" md="6" lg="4" xl="3" key="add" v-if="!['error', 'submitted'].includes(reportStage)">
-        <v-btn
-            v-if="reportStage === 'edit'"
-            variant="outlined"
-            color="secondary"
-            size="large"
-            @click="createReport"
-            append-icon="mdi-plus"
-            class="border-dashed w-100 fill-height pa-4"
-            rounded="lg"
-        >
-          Click to add item
-        </v-btn>
-      </v-col>
-      <v-col cols="auto" sm="12" md="6" lg="4" xl="3" key="submit">
+      <v-col cols="auto" sm="12" md="6" lg="4" xl="3" key="submit" class="flex-grow-1 align-self-stretch">
         <v-card
             rounded="lg"
             variant="outlined"
             color="primary"
             v-if="!['error', 'submitted'].includes(reportStage)"
+            class="d-flex flex-column fill-height"
         >
-          <v-card-title>
-            <v-icon>mdi-note-multiple</v-icon>
-            {{ reportStage === 'submitting' ? 'Submitting' : 'Submit' }} reports
-          </v-card-title>
-          <v-card-text>
-            By submitting a report, you're letting other people know where you were and weren't able to buy or fulfil your prescription for these medications.
-          </v-card-text>
+          <div>
+            <v-card-title>
+              <v-icon>mdi-note-multiple</v-icon>
+              {{ reportStage === 'submitting' ? 'Submitting' : 'Submit' }} reports
+            </v-card-title>
+            <v-card-text>
+              By submitting a report, you're letting other people know where you were and weren't able to buy or fulfil your prescription for these medications.
+            </v-card-text>
+          </div>
+          <div class="d-flex ma-4 align-self-stretch fill-height flex-grow-1 justify-center">
+          <v-btn
+              v-if="reportStage === 'edit'"
+              variant="outlined"
+              color="secondary"
+              size="large"
+              @click="createReport"
+              append-icon="mdi-plus"
+              class="border-dashed flex-grow-1 fill-height pa-4"
+              rounded="lg"
+          >
+            Click to add item
+          </v-btn>
+            <v-progress-circular indeterminate v-if="reportStage === 'submitting'" class="align-self-center"></v-progress-circular>
+          </div>
             <verify-button
-                v-if="!['submitted', 'error'].includes(reportStage)"
+                v-if="reportStage === 'edit'"
                 :color="reportStage === 'submitted' ? undefined : 'primary'"
                 :disabled="!canSubmit"
                 :loading="!['edit', 'submitted'].includes(reportStage)"
@@ -248,28 +253,30 @@ export default defineComponent({
             variant="outlined"
             color="primary"
             v-if="reportStage === 'error'"
+            class="d-flex flex-column fill-height"
         >
-          <v-card-title>
-            <v-icon>mdi-wrench-cog-outline</v-icon>
-            Something went wrong
-          </v-card-title>
-          <v-card-text>
-            <p class="mt-4">
-              We tried to submit your reports, but something unexpected happened on the server.
-            </p>
-            <p class="mt-4">
-              The problem might be temporary: you can try submitting again.
-              It may also be a problem with the reports; you can
-              continue editing and try to submit your reports with some changes.
-            </p>
-          </v-card-text>
-          <div class="mt-4 d-flex flex-wrap flex-space-between">
+          <div>
+            <v-card-title>
+              <v-icon>mdi-wrench-cog-outline</v-icon>
+              Something went wrong
+            </v-card-title>
+            <v-card-text>
+              <p class="mt-4">
+                We tried to submit your reports, but something unexpected happened on the server.
+              </p>
+              <p class="mt-4">
+                The problem might be temporary: you can try submitting again.
+                It may also be a problem with the reports; you can
+                continue editing and try to submit your reports with some changes.
+              </p>
+            </v-card-text>
+          </div>
             <verify-button
                 @verified="submitReports"
                 color="primary"
                 size="large"
                 append-icon="mdi-reload"
-                class="ma-2"
+                class="ma-4"
             >
               Try again
             </verify-button>
@@ -278,18 +285,15 @@ export default defineComponent({
                 @click="resetReporting"
                 size="large"
                 append-icon="mdi-pencil"
-                class="ma-2"
+                class="ma-4"
             >
               Continue editing
             </v-btn>
-          </div>
           <v-card-text class="mt-4 mb-6" v-if="error">
             <p>
               Details of the error message:
             </p>
-            <pre class="border pa-1 text-pre-wrap fill-height overflow-auto">
-              {{ error?.detail || error.toString() }}
-            </pre>
+            <pre class="border pa-1 text-pre-wrap fill-height overflow-auto">{{ error?.detail || error.toString() }}</pre>
           </v-card-text>
         </v-card>
         <v-card
@@ -297,34 +301,38 @@ export default defineComponent({
             variant="outlined"
             color="primary"
             v-if="reportStage === 'submitted'"
-            class="d-flex flex-column"
+            class="d-flex flex-column fill-height"
         >
-          <v-card-title>
-            <v-icon>mdi-hand-heart</v-icon>
-            Thank you
-          </v-card-title>
-          <v-card-text>
-            <p>Your reports have been submitted to the database.</p>
-            <p class="mt-4">
-              If any of your reports are about new medications, new pharmacies, or dosages which don't yet exist in the database, those reports will be marked for human review.
-              Once they have been reviewed, they will be included in the Stock Scores for affected medications and pharmacies.
-              They could be pending review for up to several days, depending on reviewer workload and availability.
-            </p>
-            <p class="mt-4">
-              Items coloured <span class="text-error">in red</span> had an error during submission.
-              Items coloured <span class="text-grey-darken-2">in grey</span>, we think you have already reported for that
-              medication in that pharmacy on that date, with your current signature.
-            </p>
-          </v-card-text>
-          <v-btn
-              color="primary"
-              @click="restartReporting"
-              size="large"
-              append-icon="mdi-pen-plus"
-              class="ma-4"
-          >
-            Start again
-          </v-btn>
+          <div>
+            <v-card-title>
+              <v-icon>mdi-hand-heart</v-icon>
+              Thank you
+            </v-card-title>
+            <v-card-text>
+              <p>Your reports have been submitted to the database.</p>
+              <p class="mt-4">
+                If any of your reports are about new medications, new pharmacies, or dosages which don't yet exist in the database, those reports will be marked for human review.
+                Once they have been reviewed, they will be included in the Stock Scores for affected medications and pharmacies.
+                They could be pending review for up to several days, depending on reviewer workload and availability.
+              </p>
+              <p class="mt-4">
+                Items coloured <span class="text-error">in red</span> had an error during submission.
+                Items coloured <span class="text-grey-darken-2">in grey</span>, we think you have already reported for that
+                medication in that pharmacy on that date, with your current signature.
+              </p>
+            </v-card-text>
+          </div>
+          <div class="d-flex flex-column fill-height justify-center">
+            <v-btn
+                color="primary"
+                @click="restartReporting"
+                size="large"
+                append-icon="mdi-pen-plus"
+                class="ma-4"
+            >
+              Start again
+            </v-btn>
+          </div>
           <v-card-text>
               <p>
                 The anonymous signature used to sign your reports for today is:

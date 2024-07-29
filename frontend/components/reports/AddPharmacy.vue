@@ -47,7 +47,14 @@ export default defineComponent({
               url: this.url
             }
           }
-      )
+      ).then((pharmacy) => {
+        return {
+          ...pharmacy,
+          title: pharmacy.name,
+          subtitle: pharmacy.postcode,
+          value: pharmacy.postcode,
+        }
+      })
       this.loading = false;
       this.$emit('submitted', result);
       this.clear();

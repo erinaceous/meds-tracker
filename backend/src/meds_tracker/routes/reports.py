@@ -1,7 +1,7 @@
 from ..controllers.reports import create_or_update_reports, get_report_scores
 from ..models.report import Report, InputReport, ReportOutput, ScoreReports
+from fastapi import Request, Query, Header, Response, HTTPException
 from ..persistent_db import depends as depends_persistent
-from fastapi import Request, Query, Header, Response
 from ..static_db import depends as depends_static
 from ..libs.cache_header import cached_response
 from ..api import app, limiter, cache

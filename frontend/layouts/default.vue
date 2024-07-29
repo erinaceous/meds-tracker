@@ -14,7 +14,7 @@ export default defineComponent({
 
 <template>
   <v-app full-height>
-    <v-container class="d-flex flex-column fill-height">
+    <v-container fluid class="d-flex flex-column fill-height">
       <site-banner></site-banner>
       <slot>
         <v-row>
