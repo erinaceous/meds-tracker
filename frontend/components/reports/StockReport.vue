@@ -1,11 +1,11 @@
 <script lang="ts">
-import {defineComponent} from 'vue'
-import StockScore from './StockScore.vue'
+import { defineComponent } from "vue";
+import StockScore from "./StockScore.vue";
 
 export default defineComponent({
   name: "StockReport",
   components: {
-    StockScore
+    StockScore,
   },
   props: {
     report: {
@@ -14,52 +14,50 @@ export default defineComponent({
     },
     showTrend: {
       type: Boolean,
-      default: true
+      default: true,
     },
   },
   data() {
     return {
       medication: undefined,
       pharmacy: undefined,
-    }
+    };
   },
   async mounted() {
     if (!this.report) {
-      return
+      return;
     }
-    this.medication = await this.getMedication(this.report.medication_uid)
-    this.pharmacy = await this.getPharmacy(this.report.pharmacy_uid)
+    this.medication = await this.getMedication(this.report.medication_uid);
+    this.pharmacy = await this.getPharmacy(this.report.pharmacy_uid);
   },
   methods: {
     async getPharmacy(pharmacy_uid: string) {
       return $fetch(
-          `${this.$config.public.api.root}/pharmacies/${pharmacy_uid}`,
-      )
+        `${this.$config.public.api.root}/pharmacies/${pharmacy_uid}`,
+      );
     },
     async getMedication(medication_uid: string) {
       return $fetch(
-          `${this.$config.public.api.root}/medications/${medication_uid}`,
-      )
-    }
-  }
-})
+        `${this.$config.public.api.root}/medications/${medication_uid}`,
+      );
+    },
+  },
+});
 </script>
 
 <template>
   <v-card
-      variant="flat"
-      rounded="lg"
-      class="fill-height d-flex flex-column"
-      elevation="12"
-      color="primary"
+    variant="flat"
+    rounded="lg"
+    class="fill-height d-flex flex-column"
+    elevation="12"
+    color="primary"
   >
     <v-card rounded="lg" elevation="2" color="#000000">
       <v-list>
         <v-list-item>
           <template #prepend>
-            <v-icon>
-              mdi-hospital-box-outline
-            </v-icon>
+            <v-icon> mdi-hospital-box-outline </v-icon>
           </template>
           <v-card-title v-if="pharmacy" class="text-wrap">
             {{ pharmacy?.name }}
@@ -73,29 +71,27 @@ export default defineComponent({
             </p>
           </v-card-subtitle>
         </v-list-item>
-        <v-divider class="mt-2" thickness="2"></v-divider>
+        <v-divider class="mt-2" thickness="2" />
         <v-list-item>
           <template #prepend>
-            <v-icon>
-              mdi-medication
-            </v-icon>
+            <v-icon> mdi-medication </v-icon>
           </template>
           <v-card-title class="text-wrap">
-            {{ medication?.product ? medication?.product : medication?.category}}
+            {{
+              medication?.product ? medication?.product : medication?.category
+            }}
           </v-card-title>
           <v-card-subtitle v-if="medication?.product" class="text-wrap">
             {{ medication?.category }}
           </v-card-subtitle>
         </v-list-item>
-        <v-divider class="mt-2 mb-2" thickness="2"></v-divider>
+        <v-divider class="mt-2 mb-2" thickness="2" />
         <v-list-item>
           <template #prepend>
-            <v-icon :disabled="!report?.dosage">
-              mdi-pill-multiple
-            </v-icon>
+            <v-icon :disabled="!report?.dosage"> mdi-pill-multiple </v-icon>
           </template>
           <v-card-title class="text-wrap">
-            <span class="text-grey" v-if="!report?.dosage">
+            <span v-if="!report?.dosage" class="text-grey">
               Not known / not applicable
             </span>
             <span v-else>
@@ -105,13 +101,8 @@ export default defineComponent({
         </v-list-item>
       </v-list>
     </v-card>
-    <stock-score
-      :show-trend="showTrend"
-      :report="report"
-    ></stock-score>
+    <stock-score :show-trend="showTrend" :report="report" />
   </v-card>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

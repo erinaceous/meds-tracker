@@ -1,13 +1,13 @@
-import '@mdi/font/css/materialdesignicons.css'
+import "@mdi/font/css/materialdesignicons.css";
 
-import 'vuetify/styles'
-import { createVuetify } from 'vuetify'
-import colors from 'vuetify/util/colors'
+import "vuetify/styles";
+import { createVuetify } from "vuetify";
+import colors from "vuetify/util/colors";
 
 export default defineNuxtPlugin((app) => {
   const vuetify = createVuetify({
     theme: {
-      defaultTheme: 'light',
+      defaultTheme: "light",
       themes: {
         light: {
           dark: false,
@@ -16,7 +16,7 @@ export default defineNuxtPlugin((app) => {
             secondary: colors.purple.base,
             background: colors.indigo.lighten4,
             surface: colors.indigo.lighten5,
-          }
+          },
         },
         dark: {
           dark: true,
@@ -25,10 +25,10 @@ export default defineNuxtPlugin((app) => {
             secondary: colors.purple.lighten5,
             background: colors.indigo.darken4,
             surface: colors.indigo.darken3,
-          }
-        }
-      }
-    }
-  })
-  app.vueApp.use(vuetify)
-})
+          },
+        },
+      },
+    },
+  });
+  app.vueApp.use(vuetify);
+});

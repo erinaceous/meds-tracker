@@ -1,6 +1,6 @@
 <script lang="ts">
-import {defineComponent} from 'vue'
-import EditListItem from './EditListItem.vue'
+import { defineComponent } from "vue";
+import EditListItem from "./EditListItem.vue";
 import SearchMedications from "~/components/search/SearchMedications.vue";
 import SearchPharmacies from "~/components/search/SearchPharmacies.vue";
 
@@ -9,12 +9,12 @@ export default defineComponent({
   components: {
     EditListItem,
     SearchMedications,
-    SearchPharmacies
+    SearchPharmacies,
   },
   props: {
     editable: {
       type: Boolean,
-      default: false
+      default: false,
     },
     source: {
       type: Object,
@@ -22,16 +22,16 @@ export default defineComponent({
     },
     showTrend: {
       type: Boolean,
-      default: true
+      default: true,
     },
     showRemoveButton: {
       type: Boolean,
-      default: false
+      default: false,
     },
     autoSave: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     return {
@@ -49,42 +49,46 @@ export default defineComponent({
         in_stock: false,
         reported_for_date: null,
         submitted: null,
-      }
-    }
+      },
+    };
   },
   computed: {
     canSubmit() {
       if (this.changed) {
         return false;
       }
-      if (!this.item.medication || !this.item.pharmacy || !this.item.reported_for_date) {
+      if (
+        !this.item.medication ||
+        !this.item.pharmacy ||
+        !this.item.reported_for_date
+      ) {
         return false;
       }
       return true;
-    }
+    },
   },
   watch: {
     item: {
       deep: true,
       handler() {
         if (this.autoSave) {
-          this.saveReportItem()
+          this.saveReportItem();
         } else {
-          this.changed = true
+          this.changed = true;
         }
-      }
+      },
     },
-    'item.medication': {
+    "item.medication": {
       handler(val) {
         if (!val || !val.uid) {
-          this.types = []
-          this.dosages = []
-          return
+          this.types = [];
+          this.dosages = [];
+          return;
         }
-        this.getTypes(val.uid)
-        this.getDosages(val.uid)
-      }
-    }
+        this.getTypes(val.uid);
+        this.getDosages(val.uid);
+      },
+    },
   },
   mounted() {
     if (this.source) {
@@ -92,7 +96,7 @@ export default defineComponent({
       this.$nextTick(() => {
         this.changed = false;
         this.$el.scrollTo();
-      })
+      });
     }
     if (!this.item.reported_for_date) {
       this.item.reported_for_date = new Date();
@@ -102,74 +106,78 @@ export default defineComponent({
     async getDosages(medication_uid: string) {
       this.dosages = [];
       this.dosages = await $fetch(
-          `${this.$config.public.api.root}/medications/dosages`,
-          {
-            params: {
-              uid: [medication_uid]
-            }
-          }
-      )
+        `${this.$config.public.api.root}/medications/dosages`,
+        {
+          params: {
+            uid: [medication_uid],
+          },
+        },
+      );
     },
     async getTypes(medication_uid: string) {
       this.types = [];
       this.types = await $fetch(
-          `${this.$config.public.api.root}/medications/types`,
-          {
-            params: {
-              uid: [medication_uid]
-            }
-          }
-      )
+        `${this.$config.public.api.root}/medications/types`,
+        {
+          params: {
+            uid: [medication_uid],
+          },
+        },
+      );
     },
     saveReportItem() {
       this.changed = false;
-      this.$emit('saveReportItem', this.item)
+      this.$emit("saveReportItem", this.item);
     },
     removeReportItem() {
-      this.$emit('removeReportItem', this.source)
-    }
-  }
-})
+      this.$emit("removeReportItem", this.source);
+    },
+  },
+});
 </script>
 
 <template>
   <v-list rounded="lg" elevation="12">
     <!-- MEDICATION -->
     <edit-list-item
-        v-model="item.medication"
-        :editable="editable"
-        label="Medication"
-        prepend-icon="mdi-medication"
-        placeholder-editable="Click to select"
-        placeholder="Not known"
-        placeholder-editing="Search for medication by name"
-        title-property="category"
-        subtitle-property="product"
-        required
+      v-model="item.medication"
+      :editable="editable"
+      label="Medication"
+      prepend-icon="mdi-medication"
+      placeholder-editable="Click to select"
+      placeholder="Not known"
+      placeholder-editing="Search for medication by name"
+      title-property="category"
+      subtitle-property="product"
+      required
     >
-      <template #list-item-title-text>{{ item.medication?.product || item.medication?.category }}</template>
-      <template #list-item-subtitle-text>{{ item.medication?.category }}</template>
+      <template #list-item-title-text>{{
+        item.medication?.product || item.medication?.category
+      }}</template>
+      <template #list-item-subtitle-text>{{
+        item.medication?.category
+      }}</template>
       <search-medications
         v-model="item.medication"
         :editable="editable"
         variant="plain"
         density="compact"
         autofocus
-      ></search-medications>
+      />
     </edit-list-item>
 
-<!--    &lt;!&ndash; TYPE &ndash;&gt;-->
-<!--    <edit-list-item-->
-<!--      v-model="item.type"-->
-<!--      :editable="editable"-->
-<!--      :items="types"-->
-<!--      :disabled="!item.medication"-->
-<!--      label="Method of administration"-->
-<!--      prepend-icon="mdi-pill-multiple"-->
-<!--      :placeholder-editable="item.medication ? 'Click to edit' : 'Select medication first'"-->
-<!--      placeholder-editing="Type in method or choose from list"-->
-<!--      placeholder="Not known / not applicable"-->
-<!--    ></edit-list-item>-->
+    <!--    &lt;!&ndash; TYPE &ndash;&gt;-->
+    <!--    <edit-list-item-->
+    <!--      v-model="item.type"-->
+    <!--      :editable="editable"-->
+    <!--      :items="types"-->
+    <!--      :disabled="!item.medication"-->
+    <!--      label="Method of administration"-->
+    <!--      prepend-icon="mdi-pill-multiple"-->
+    <!--      :placeholder-editable="item.medication ? 'Click to edit' : 'Select medication first'"-->
+    <!--      placeholder-editing="Type in method or choose from list"-->
+    <!--      placeholder="Not known / not applicable"-->
+    <!--    ></edit-list-item>-->
 
     <!-- DOSAGE -->
     <edit-list-item
@@ -180,33 +188,34 @@ export default defineComponent({
       :disabled="!item.medication"
       label="Dosage"
       prepend-icon="mdi-pill-multiple"
-      :placeholder-editable="item.medication ? 'Click to edit' : 'Select medication first'"
+      :placeholder-editable="
+        item.medication ? 'Click to edit' : 'Select medication first'
+      "
       placeholder-editing="Type in dosage or choose from list"
       placeholder="Not known / not applicable"
-    >
-    </edit-list-item>
+    />
 
     <!-- PHARMACY -->
     <edit-list-item
-        v-model="item.pharmacy"
-        :editable="editable"
-        label="Pharmacy"
-        title-property="name"
-        subtitle-property="postcode"
-        placeholder="Unknown"
-        placeholder-editable="Click to choose"
-        placeholder-editing="Search for pharmacy by postcode or address"
-        prepend-icon="mdi-hospital-box-outline"
-        required
+      v-model="item.pharmacy"
+      :editable="editable"
+      label="Pharmacy"
+      title-property="name"
+      subtitle-property="postcode"
+      placeholder="Unknown"
+      placeholder-editable="Click to choose"
+      placeholder-editing="Search for pharmacy by postcode or address"
+      prepend-icon="mdi-hospital-box-outline"
+      required
     >
       <search-pharmacies
-          v-model="item.pharmacy"
-          :editable="editable"
-          :readonly="!editable"
-          variant="plain"
-          density="compact"
-          autofocus
-      ></search-pharmacies>
+        v-model="item.pharmacy"
+        :editable="editable"
+        :readonly="!editable"
+        variant="plain"
+        density="compact"
+        autofocus
+      />
     </edit-list-item>
 
     <!-- DATE -->
@@ -219,58 +228,72 @@ export default defineComponent({
       prepend-icon="mdi-calendar"
       required
     >
-      <template #list-item-title-text>{{ item.reported_for_date?.toLocaleDateString() }}</template>
+      <template #list-item-title-text>{{
+        item.reported_for_date?.toLocaleDateString()
+      }}</template>
       <v-date-picker
-          :readonly="!editable"
-          show-adjacent-months
-          v-model="item.reported_for_date"
-          :max="new Date()"
-      ></v-date-picker>
+        v-model="item.reported_for_date"
+        :readonly="!editable"
+        show-adjacent-months
+        :max="new Date()"
+      />
     </edit-list-item>
 
     <!-- IN STOCK? -->
-    <v-list-subheader>In stock? <span class="text-error">&ast;</span></v-list-subheader>
+    <v-list-subheader
+      >In stock? <span class="text-error">&ast;</span></v-list-subheader
+    >
     <v-list-item>
       <v-btn
-          :readonly="!editable"
+        :readonly="!editable"
         prepend-icon="mdi-store-check"
         :color="item.in_stock ? 'success' : 'error'"
         class="d-flex flex-grow-1 w-100 justify-space-between"
         size="large"
-        @click="() => { if (editable) { item.in_stock = !item.in_stock } }"
+        @click="
+          () => {
+            if (editable) {
+              item.in_stock = !item.in_stock;
+            }
+          }
+        "
       >
         <template #default>
-          {{ (item.in_stock ? 'Yes' : 'No') }}
+          {{ item.in_stock ? "Yes" : "No" }}
         </template>
         <template #append>
           <v-icon>
-            {{ item.in_stock ? 'mdi-checkbox-marked' : 'mdi-checkbox-blank-outline' }}
+            {{
+              item.in_stock
+                ? "mdi-checkbox-marked"
+                : "mdi-checkbox-blank-outline"
+            }}
           </v-icon>
         </template>
       </v-btn>
     </v-list-item>
 
     <!-- ACTION BUTTONS -->
-    <v-divider class="mb-2 mt-2" v-if="!autoSave && showRemoveButton"></v-divider>
+    <v-divider v-if="!autoSave && showRemoveButton" class="mb-2 mt-2" />
     <v-list-item
-        v-if="!autoSave && showRemoveButton"
+      v-if="!autoSave && showRemoveButton"
       class="d-flex justify-center"
     >
       <v-btn
-          v-if="!autoSave"
-          color="primary"
+        v-if="!autoSave"
+        color="primary"
         variant="text"
         prepend-icon="mdi-content-save"
-        @click="saveReportItem"
         :disabled="!changed"
+        @click="saveReportItem"
       >
         Save
       </v-btn>
       <v-btn
-          v-if="showRemoveButton"
-          variant="text"
-          prepend-icon="mdi-delete"
-          @click="removeReportItem"
+        v-if="showRemoveButton"
+        variant="text"
+        prepend-icon="mdi-delete"
+        @click="removeReportItem"
       >
         Remove
       </v-btn>
@@ -278,6 +301,4 @@ export default defineComponent({
   </v-list>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
