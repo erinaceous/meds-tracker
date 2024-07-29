@@ -43,7 +43,7 @@ async def get_report_scores(
             Report.pharmacy_uid,
             Report.dosage,
             Report.reported_for_date,
-            sqlalchemy.func.avg(Report.in_stock),
+            sqlalchemy.func.avg(Report.in_stock.cast(sqlalchemy.Integer)),
             sqlalchemy.func.count(Report.in_stock == True),
             sqlalchemy.func.count(Report.in_stock == False),
         )
