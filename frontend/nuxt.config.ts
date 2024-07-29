@@ -2,12 +2,24 @@
 import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 
 export default defineNuxtConfig({
+  runtimeConfig: {
+    public: {
+      api: {
+        root: '/api'
+      }
+    }
+  },
+  meta: {
+    title: 'UK medication supply tracker'
+  },
   compatibilityDate: '2024-04-03',
   ssr: true,
   devtools: { enabled: true },
   build: {
     transpile: ['vuetify'],
+    sourcemap: true
   },
+  plugins: ['~/plugins/vuetify', '~/plugins/localstorage', '~/plugins/api_client', '~/plugins/v_focus.client'],
   modules: [
     (_options, nuxt) => {
       nuxt.hooks.hook('vite:extendConfig', (config) => {
@@ -16,7 +28,8 @@ export default defineNuxtConfig({
       })
     },
     'nuxt-lodash',
-    '@vite-pwa/nuxt'
+    '@vite-pwa/nuxt',
+    //'@nuxtjs/sentry'
   ],
   vite: {
     server: {
@@ -31,6 +44,9 @@ export default defineNuxtConfig({
     vue: {
       template: {
         transformAssetUrls,
+        compilerOptions: {
+          isCustomElement: (tag) => ['altcha-widget'].includes(tag)
+        }
       },
     },
   }

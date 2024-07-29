@@ -11,16 +11,22 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "test:ts": "tsc --noEmit"
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",
+    "@nuxtjs/sentry": "^8.0.7",
     "@vite-pwa/nuxt": "^0.9.1",
+    "altcha": "^0.6.3",
     "nuxt": "^3.12.3",
-    "vue": "latest"
+    "vue": "^3.4.33"
   },
   "devDependencies": {
     "nuxt-lodash": "^2.5.3",
+    "openapi-fetch": "^0.10.2",
+    "openapi-typescript": "^7.1.0",
+    "typescript": "^5.5.4",
     "vite-plugin-vuetify": "^2.0.3",
     "vuetify": "^3.6.12"
   }

@@ -1,8 +1,8 @@
-__all__ = [
-    "medications",
-    "pharmacies",
-    "reports"
-]
+__all__ = ["altchas", "medications", "pharmacies", "reports", "static"]
+
+
+SHORT_EXPIRY = 300  # 5 minutes
+LONG_EXPIRY = 43200  # 12 hours
 
 
 import importlib
