@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 import argparse
 import requests
+import random
 import json
+import time
 import os
 import re
 
@@ -27,6 +29,7 @@ def request(page=None, root=ROOT, cache_dir=CACHE_DIR):
         if page is not None:
             url += f"/{page}"
         url += "/page-data.json"
+        time.sleep(random.random() * 0.1)
         response = requests.get(url, timeout=30)
         response.raise_for_status()
         response_json = response.json()

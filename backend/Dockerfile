@@ -8,5 +8,5 @@ COPY ./requirements.txt /tmp/
 RUN pip install --upgrade pip && pip install --upgrade -r /tmp/requirements.txt
 COPY ./src/meds_tracker /app/
 RUN find -type f -name '*.py' | xargs python -m py_compile
-RUN /app/static_db/build.sh && rm -vrf /app/data/download
+#RUN /app/static_db/build.sh && rm -vrf /app/data/download
 USER user
