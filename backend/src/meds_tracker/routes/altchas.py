@@ -15,7 +15,7 @@ import typing
 
 
 @app.get("/altcha/challenge", tags=["Registration"])
-@limiter.limit("1/second")
+@limiter.limit("100/second")
 async def altcha_challenge(
     request: Request,
 ) -> Altcha:
@@ -24,7 +24,7 @@ async def altcha_challenge(
 
 
 @app.post("/altcha/verify", tags=["Registration"])
-@limiter.limit("1/second")
+@limiter.limit("100/second")
 async def altcha_validate(
     request: Request,
     response: Response,
@@ -38,7 +38,7 @@ async def altcha_validate(
 
 
 @app.get("/altcha", tags=["Registration"])
-@limiter.limit("1/second")
+@limiter.limit("100/second")
 async def altcha_check(
     request: Request,
     response: Response,

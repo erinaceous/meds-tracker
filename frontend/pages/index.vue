@@ -13,25 +13,22 @@ export default defineComponent({
     return {
       reports: undefined,
       loading: false,
+      error: undefined,
     };
-  },
-  computed: {
-    rowClasses() {
-      return {
-        "mb-2": true,
-        "ml-n7": this.$vuetify.display.smAndDown,
-        "mr-n7": this.$vuetify.display.smAndDown,
-      };
-    },
   },
   mounted() {
     this.reports = undefined;
     this.loading = false;
+    this.error = undefined;
   },
   methods: {
     onSearchReports(reports) {
+      this.error = undefined;
       this.loading = false;
       this.reports = reports;
+    },
+    onSearchError(error) {
+      this.error = error;
     },
   },
 });
@@ -49,6 +46,7 @@ export default defineComponent({
             }
           "
           @search-reports="onSearchReports"
+          @search-error="onSearchError"
         />
       </v-col>
     </v-slide-y-transition>
@@ -70,7 +68,7 @@ export default defineComponent({
         </div>
       </v-col>
       <v-col
-        v-if="reports && reports.length === 0"
+        v-if="error || (reports && reports.length === 0)"
         key="no-results"
         cols="auto"
         sm="12"
@@ -82,12 +80,26 @@ export default defineComponent({
         <v-card
           variant="outlined"
           class="mt-2 d-flex flex-column justify-center"
+          :color="error ? 'error' : undefined"
         >
-          <v-card-title>
+          <v-card-title v-if="error">
+            <v-icon>mdi-wrench-cog-outline</v-icon>
+            Something went wrong
+          </v-card-title>
+          <v-card-title v-else>
             <v-icon>mdi-invoice-text-clock</v-icon>
             No results yet
           </v-card-title>
-          <v-card-text>
+          <v-card-text v-if="error">
+            <p>
+              We tried to search our database, but something unexpected happened
+              on the server.
+            </p>
+            <p class="mt-4">
+              The problem may be temporary - try searching again in a minute.
+            </p>
+          </v-card-text>
+          <v-card-text v-else>
             <p>
               Your search returned no results for your selection of medications
               at these pharmacies for this point in time.
@@ -107,6 +119,12 @@ export default defineComponent({
                 submitting reports of your own </NuxtLink
               >.
             </p>
+          </v-card-text>
+          <v-card-text v-if="error" class="mt-4 mb-6">
+            <p>Details of the error message:</p>
+            <pre class="border pa-1 text-pre-wrap fill-height overflow-auto">{{
+              error?.detail || error.toString()
+            }}</pre>
           </v-card-text>
         </v-card>
       </v-col>

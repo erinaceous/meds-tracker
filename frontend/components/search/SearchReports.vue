@@ -71,7 +71,6 @@ export default defineComponent({
         },
       ],
       loading: false,
-      error: undefined,
     };
   },
   computed: {
@@ -92,7 +91,6 @@ export default defineComponent({
   },
   mounted() {
     this.loading = false;
-    this.error = undefined;
   },
   methods: {
     async getDosages() {
@@ -118,7 +116,6 @@ export default defineComponent({
         return;
       }
       this.reports = [];
-      this.error = undefined;
       this.loading = true;
       this.reports = await this.getReports(
         this.medications,
@@ -126,6 +123,10 @@ export default defineComponent({
         this.selectedDosages,
         this.duration,
       )
+        .catch((error) => {
+          this.loading = false;
+          this.$emit("searchError", error);
+        })
         .then((reports) => {
           return reports.map((report) => {
             return {
@@ -133,10 +134,6 @@ export default defineComponent({
               _id: `${report.medication_uid}+${report.pharmacy_uid}+${report.dosage}+${report.scores?.length}`,
             };
           });
-        })
-        .catch((error) => {
-          this.loading = false;
-          this.error = error;
         });
       this.loading = false;
       this.$emit("searchReports", this.reports);

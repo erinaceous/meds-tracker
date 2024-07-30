@@ -20,7 +20,7 @@ import typing
 
 
 @app.get("/medications", tags=["Medications"])
-@limiter.limit("1/second")
+@limiter.limit("100/second")
 # @cache(expire=LONG_EXPIRY)
 async def list_medications(
     request: Request,
@@ -37,7 +37,7 @@ async def list_medications(
 
 
 @app.post("/medications", tags=["Medications"])
-@limiter.limit("1/second")
+@limiter.limit("100/second")
 async def submit_medication(
     request: Request,
     medication: InputMedication,
@@ -51,7 +51,7 @@ async def submit_medication(
 
 
 @app.get("/medications/categories", tags=["Medications"])
-@limiter.limit("2/second")
+@limiter.limit("100/second")
 # @cache(expire=LONG_EXPIRY)
 async def list_medication_categories(
     request: Request,
@@ -64,7 +64,7 @@ async def list_medication_categories(
 
 
 @app.get("/medications/autocomplete/{text}", tags=["Medications"])
-@limiter.limit("2/second")
+@limiter.limit("100/second")
 # @cache(expire=LONG_EXPIRY)
 async def autocomplete_medications(
     request: Request,
@@ -80,7 +80,7 @@ async def autocomplete_medications(
 
 
 @app.get("/medications/dosages", tags=["Medications"])
-@limiter.limit("2/second")
+@limiter.limit("100/second")
 # @cache(expire=LONG_EXPIRY)
 async def get_medication_dosages(
     request: Request,
@@ -94,7 +94,7 @@ async def get_medication_dosages(
 
 
 @app.get("/medications/types", tags=["Medications"])
-@limiter.limit("2/second")
+@limiter.limit("100/second")
 # @cache(expire=LONG_EXPIRY)
 async def get_medication_types(
     request: Request,
@@ -108,7 +108,7 @@ async def get_medication_types(
 
 
 @app.get("/medications/{uid}", tags=["Medications"])
-@limiter.limit("10/second")
+@limiter.limit("100/second")
 # @cache(expire=LONG_EXPIRY)
 async def get_medication(
     request: Request,

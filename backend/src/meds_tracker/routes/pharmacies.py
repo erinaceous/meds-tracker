@@ -16,7 +16,7 @@ import typing
 
 
 @app.get("/pharmacies", tags=["Pharmacies"])
-@limiter.limit("1/second")
+@limiter.limit("100/second")
 # @cache(expire=LONG_EXPIRY)
 async def list_pharmacies(
     request: Request,
@@ -43,7 +43,7 @@ async def list_pharmacies(
 
 
 @app.post("/pharmacies", tags=["Pharmacies"])
-@limiter.limit("1/second")
+@limiter.limit("100/second")
 async def submit_pharmacy(
     request: Request,
     pharmacy: InputPharmacy,
@@ -60,7 +60,7 @@ async def submit_pharmacy(
 
 
 @app.get("/pharmacies/autocomplete/{search}", tags=["Pharmacies"])
-@limiter.limit("2/second")
+@limiter.limit("100/second")
 # @cache(expire=LONG_EXPIRY)
 async def autocomplete_pharmacies(
     request: Request,
@@ -80,7 +80,7 @@ async def autocomplete_pharmacies(
 
 
 @app.get("/pharmacies/{uid}", tags=["Pharmacies"])
-@limiter.limit("10/second")
+@limiter.limit("100/second")
 # @cache(expire=LONG_EXPIRY)
 async def get_medication(
     request: Request, response: Response, uid: str, session: Session = depends_static()

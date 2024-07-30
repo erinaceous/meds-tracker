@@ -245,9 +245,7 @@ export default defineComponent({
           <div>
             <v-card-title>
               <v-icon>mdi-note-multiple</v-icon>
-              {{
-                reportStage === "submitting" ? "Submitting" : "Submit"
-              }}
+              {{ reportStage === "submitting" ? "Submitting" : "Submit" }}
               reports
             </v-card-title>
             <v-card-text>
@@ -301,7 +299,7 @@ export default defineComponent({
               Something went wrong
             </v-card-title>
             <v-card-text>
-              <p class="mt-4">
+              <p>
                 We tried to submit your reports, but something unexpected
                 happened on the server.
               </p>

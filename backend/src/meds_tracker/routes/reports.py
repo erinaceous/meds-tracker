@@ -12,7 +12,7 @@ import typing
 
 
 @app.get("/reports", tags=["Reports"])
-@limiter.limit("2/second")
+@limiter.limit("100/second")
 # @cache(expire=SHORT_EXPIRY)
 async def get_reports(
     request: Request,
@@ -32,7 +32,7 @@ async def get_reports(
 
 
 @app.get("/reports/scores", tags=["Reports"])
-@limiter.limit("2/second")
+@limiter.limit("100/second")
 # @cache(expire=SHORT_EXPIRY)
 async def get_scores(
     request: Request,
@@ -63,7 +63,7 @@ async def get_scores(
 
 
 @app.post("/reports", tags=["Reports"])
-@limiter.limit("10/second")
+@limiter.limit("100/second")
 async def submit_reports(
     request: Request,
     input_reports: typing.List[InputReport],
