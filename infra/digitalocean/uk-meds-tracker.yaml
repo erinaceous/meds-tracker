@@ -1,0 +1,53 @@
+alerts:
+- disabled: true
+  rule: DEPLOYMENT_FAILED
+- disabled: true
+  rule: DOMAIN_FAILED
+features:
+- buildpack-stack=ubuntu-22
+ingress:
+  rules:
+  - component:
+      name: meds-tracker-backend
+    match:
+      path:
+        prefix: /api
+  - component:
+      name: meds-tracker-frontend
+    match:
+      path:
+        prefix: /
+name: uk-meds-tracker
+region: lon
+services:
+- dockerfile_path: backend/Dockerfile
+  envs:
+  - key: SENTRY_DSN
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+    value: EV[1:H3znqAshCWaPJQYSEI2ce8cD4+1fopsF:V36itgCMbd1B5rTVoFYqUQ+kuaWYNdYZdxa8WwfoTHw/ju998mlzn1vAL9IWe4dxUlwi7PFVwK2efhx+wHB96lTwtpS9E9eqtQQ4PWO9HmvtPQgOaKQeeP8eDgTPi8oHPnc3k6S6DXZSwFiCrhxa]
+  - key: PERSISTENT_DB_URI
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+    value: EV[1:j/Mv5DAVBfsbVKg9GpshyNwFzfL5H9HX:LepSMHtgbMdNwmgLjjvdVEPsKijKq9W8yTPkls8rKyIBe6YxdADS0UmJpYwJ3BSTnMzJROPYYQ5OzssfkhYoSAtHX2171Z4vjuVknzKibeMH7jJB4cXM4q45sP4m5ToP7qa030rmLd9ISQUx5Pdv0rNQWyPb0hzimkLEt3Nvq8lVzjZXl1rnLIfqBK+jxjqyqA==]
+  github:
+    branch: main
+    repo: erinaceous/meds-tracker
+  http_port: 80
+  instance_count: 1
+  instance_size_slug: apps-s-1vcpu-0.5gb
+  name: meds-tracker-backend
+  source_dir: backend
+static_sites:
+- dockerfile_path: frontend/Dockerfile
+  envs:
+  - key: SENTRY_DSN
+    scope: BUILD_TIME
+    type: SECRET
+    value: EV[1:vBk8TuHnXZhAq1DV6TW/FhooDklJPQf8:xgpFmGawyAKgf/1lEEAgLJTQIRazHjQ4vkNqBjBkzs/DR1G/gM/x50ZQOXSi9CdCdfxqWEw0kPw7H2aDSWYaAIV1RsXK9zo6gKtvss8sDd5tKiH9VrxCPhNskU8Ws/AGuCrwdmJsT4NSTarsavZW]
+  github:
+    branch: main
+    repo: erinaceous/meds-tracker
+  name: meds-tracker-frontend
+  output_dir: /app/public
+  source_dir: frontend
