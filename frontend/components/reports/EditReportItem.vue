@@ -158,6 +158,7 @@ export default defineComponent({
         item.medication?.category
       }}</template>
       <search-medications
+        ref="input"
         v-model="item.medication"
         :editable="editable"
         variant="plain"
@@ -209,6 +210,7 @@ export default defineComponent({
       required
     >
       <search-pharmacies
+        ref="input"
         v-model="item.pharmacy"
         :editable="editable"
         :readonly="!editable"
@@ -232,6 +234,7 @@ export default defineComponent({
         item.reported_for_date?.toLocaleDateString()
       }}</template>
       <v-date-picker
+        ref="input"
         v-model="item.reported_for_date"
         :readonly="!editable"
         show-adjacent-months
