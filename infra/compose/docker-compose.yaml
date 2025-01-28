@@ -1,0 +1,24 @@
+name: uk-meds-tracker
+
+services:
+  backend:
+    build:
+      context: ../../backend
+    volumes:
+      - backend-data:/app/data
+    ports:
+      - "8123:80"
+    env_file:
+      - path: ./backend.env
+        required: false
+  frontend:
+    build:
+      context: ../../frontend
+    ports:
+      - "8124:3000"
+    env_file:
+      - path: ./frontend.env
+        required: false
+
+volumes:
+  backend-data:
